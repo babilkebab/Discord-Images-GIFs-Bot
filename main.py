@@ -1,11 +1,7 @@
 import discord
 from credential.py import *
 
-<<<<<<< HEAD
 TOKEN = token
-=======
-TOKEN = "YOUR TOKEN"
->>>>>>> a6b10c67851a11bd0a5600565a2a557875ef42a9
 
 client = discord.Client()
 
