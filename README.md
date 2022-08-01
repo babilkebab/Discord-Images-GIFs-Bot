@@ -9,4 +9,4 @@ https://developers.google.com/custom-search/v1/introduction <br/>
 2. Ricerca di una GIF su GIPHY tramite le API di GIPHY stesso. Nella versione con licenza gratuita permettono un massimo di 1000 queries/giorno.
 https://developers.giphy.com/<br/>
 
-Devs: @babilkebab @tuppulix @MURo420
+Devs: @babilkebab @tuppulix @SpataMassimo
