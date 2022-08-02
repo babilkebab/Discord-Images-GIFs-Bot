@@ -1,19 +1,34 @@
+import os
+import random
 import discord
+from discord.ext import commands
+from googleapiclient.discovery import build
 
-TOKEN = "YOUR TOKEN"
+TOKEN = "*Your token*"   #Bot Token
+api_key = "*Your api-key*"  #Google API key
+# cx is Google Search Engine ID
 
-client = discord.Client()
+def main():
+    client = commands.Bot(command_prefix="$")
 
-@client.event
+    @client.event
+    async def on_ready():
+        print("!!! Bot Is Online !!!\n")
 
-async def on_ready():
-    print("{0.user} is now online!".format(client))
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-    if message.content.startswith('!hello'):
-        await message.channel.send('Hello there!')
+    @client.command(aliases=["show"])
+    async def showpic(ctx, *, search):
+        ran = random.randint(0, 9)
+        resource = build("customsearch", "v1", developerKey=api_key).cse()
+        result = resource.list(
+            q=f"{search}", cx="*your cx*", searchType="image"
+        ).execute()
+        url = result["items"][ran]["link"]
+        embed1 = discord.Embed(title=f"This is the image ({search}) you reserch|")
+        embed1.set_image(url=url)
+        await ctx.send(embed=embed1)
 
-client.run(TOKEN)
+    client.run(TOKEN)
+
+if __name__ == "__main__":
+    main()
