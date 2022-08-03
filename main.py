@@ -1,34 +1,46 @@
 import os
 import random
 import discord
+import giphy_client
 from discord.ext import commands
 from googleapiclient.discovery import build
+from giphy_client.rest import ApiException
 
-TOKEN = "*Your token*"   #Bot Token
-api_key = "*Your api-key*"  #Google API key
-# cx is Google Search Engine ID
+TOKEN = "MTAwMzA3NDU4NzQ3MjQ0MTM5NA.GjUAaJ.muk8XRLoUXeEcmfy7k0OAR7Exg4u4jGD7neJgM"  #Bot Token
+google_search_api_key = "AIzaSyDrw6XvXQbcYfHQWW54GHL3Us0Fj7IrkBA"  #Google API key
+giphy_search_api_key = "lbm3JP1gQRXcOejzr9D9DBSkyU0MeOSL"  #GIPHY API key
+#cx is Google Search Engine ID
 
 def main():
     client = commands.Bot(command_prefix="$")
-
+    
     @client.event
     async def on_ready():
-        print("!!! Bot Is Online !!!\n")
-
+        print("!!! Bot Image Search Is Online !!!\n")
 
     @client.command(aliases=["show"])
     async def showpic(ctx, *, search):
         ran = random.randint(0, 9)
-        resource = build("customsearch", "v1", developerKey=api_key).cse()
+        resource = build("customsearch", "v1", developerKey=google_search_api_key).cse()
         result = resource.list(
-            q=f"{search}", cx="*your cx*", searchType="image"
+            q=f"{search}", cx="51d03d688da4c4c2f", searchType="image"
         ).execute()
         url = result["items"][ran]["link"]
         embed1 = discord.Embed(title=f"This is the image ({search}) you reserch|")
         embed1.set_image(url=url)
         await ctx.send(embed=embed1)
-
+    
+        api_instance = giphy_client.DefaultApi()
+        try:
+            api_responce = api_instance.gifs_search_get(giphy_search_api_key, q=f"{search}", limit=5, rating="g")
+            lst = list(api_responce.data)
+            giff = random.choice(lst)
+            embed2 = discord.Embed(title=f"This is the gif ({search}) you reserch|")
+            embed2.set_image(url=f'https://media.giphy.com/{giff.id}/giphy.gif')
+            await ctx.send(giff.embed_url)
+        except ApiException as e:
+            print("Exception when calling API!")
+    
     client.run(TOKEN)
-
 if __name__ == "__main__":
     main()
